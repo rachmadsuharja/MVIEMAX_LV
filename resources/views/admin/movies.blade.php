@@ -15,10 +15,10 @@
             <div class="input-group-prepend">
                 <span class="input-group-text bg-secondary text-white" id="inputGroup-sizing-default">Cari</span>
             </div>
-            <input type="text" id="searchInput" onkeyup="searchFilm()" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+            <input type="text" id="searchInput" onkeyup="search()" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
         </div>
     </div>
-    <table id="filmList" class="table table-dark mt-3" style="color: #dddd;">
+    <table id="table" class="table table-dark mt-3" style="color: #dddd;">
         <thead>
             <th class="bg-secondary text-white" scope="col">Film Settings</th>
             <th class="bg-secondary text-white" scope="col">Judul</th>
@@ -30,7 +30,11 @@
         @foreach ($films as $film)
             <tr>
                 <th>
-                    <a class="btn btn-outline-danger" href="/admin/all-movies/delete-movie/{{$film->id}}" onclick="return confirm('Anda yakin?')"><i class="fa-solid fa-trash"></i> Hapus</a>
+                    <form method="post" action="{{route('rm-movie', ['id' => $film->id])}}">
+                        @csrf
+                        @method('Delete')
+                        <button class="btn btn-outline-danger" type="submit" onclick="return confirm('Anda yakin?')"><i class="fa-solid fa-trash"></i> Hapus</button>
+                    </form>
                 </th>
                 <td>{{$film->title}}</td>
                 <td>{{$film->release_date}}</td>
@@ -40,5 +44,6 @@
             </tr>
         @endforeach
     </table>
+    {{$films->links()}}
 </div>
 @endsection

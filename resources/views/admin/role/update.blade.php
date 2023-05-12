@@ -70,7 +70,7 @@
                             <label for="role_limit" class="form-label text-white">Limit</label>
                             <div class="form-control">
                                 <input type="range" name="role_limit" class="form-range" id="role_limit" value="{{$role->role_limit}}" min="1" max="12" oninput="this.nextElementSibling.value = this.value + ' Bulan'">
-                                <output for="role_limit" style="width: 4em; color:#555555"> Bulan</output>
+                                <output for="role_limit" style="width: 4em; color:#555555">{{$role->role_limit}} Bulan</output>
                             </div>
                         </div>
                     </div>

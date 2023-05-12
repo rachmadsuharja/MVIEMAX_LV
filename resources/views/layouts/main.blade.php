@@ -17,15 +17,35 @@
 </head>
 
 <body class="bg-dark">
-
     @yield('navbar')
-
     <div class="container-page w-100 pt-4 p-0">
         @yield('container')
     </div>
 </body>
 <script>
     AOS.init();
+
+    function search() {
+    // Declare variables
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("searchInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("table");
+    tr = table.getElementsByTagName("tr");
+
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
+        }
+        }
+    }
+    }
+
     setTimeout(function() {
         new TypeIt("#subtitle", {
             strings: "Platform Streaming & Download Film Terbaik.",

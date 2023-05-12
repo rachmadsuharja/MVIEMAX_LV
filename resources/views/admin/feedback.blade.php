@@ -15,11 +15,11 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text bg-secondary text-white" id="inputGroup-sizing-default">Cari</span>
                 </div>
-                <input type="text" id="searchInput" onkeyup="searchFeedback()" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                <input type="text" id="searchInput" onkeyup="search()" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
             </div>
             <p class="fw-bold text-white bg-primary p-1 mt-2 rounded">Jumlah : {{$feedAmount}}</p>
         </div>
-        <table id="feedbackList" class="table table-dark" style="color: #dddd;">
+        <table id="table" class="table table-dark" style="color: #dddd;">
             <thead>
                 <th class="bg-secondary text-white" width="190" scope="col">Feedback Settings</th>
                 <th class="bg-secondary text-white" scope="col">Nama</th>
@@ -28,9 +28,14 @@
             </thead>
             @foreach ($feedback as $feed)
                 <tr>
-                    <th>
+                    <th class="d-flex">
                         <a class="btn btn-outline-primary p-1" href="/admin/feedback/edit-feedback/{{$feed->id}}"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
-                        <a class="btn btn-outline-danger p-1" href="/admin/feedback/delete-feedback/{{$feed->id}}" onclick="return confirm('Anda yakin?')"><i class="fa-solid fa-trash"></i> Hapus</a>
+                        &nbsp;
+                        <form method="post" action="{{route('delete-feedback', ['id' => $feed->id])}}">
+                            @csrf
+                            @method('delete')
+                            <button class="btn btn-outline-danger" type="submit" onclick="return confirm('Anda yakin?')"><i class="fa-solid fa-trash"></i> Hapus</button>
+                        </form>
                     </th>
                     <td>{{$feed->name}}</td>
                     <td>{{$feed->email}}</td>
@@ -38,5 +43,6 @@
                 </tr>
             @endforeach
         </table>
+        {{$feedback->links()}}
     </div>
 @endsection

@@ -29,11 +29,11 @@
                                 @enderror
                             </div>
                             <div class="mb-2 d-flex justify-content-between">
-                                <div class="mb-2">
+                                <div class="w-50">
                                     <label for="password" class="form-label">Password</label>
                                     <input class="form-control" type="password" name="password" id="password" placeholder="Password..." aria-label="default input example">
                                 </div>
-                                <div class="mb-2">
+                                <div class="w-50">
                                     <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
                                     <input class="form-control" type="password" name="password_confirmation" id="password_confirmation" placeholder="Konfirmasi password..." aria-label="default input example">
                                 </div>
@@ -62,7 +62,7 @@
                                 </select>
                             </div>
                             <div class="mb-4 d-flex justify-content-between">
-                                <p>Sudah punya akun? <a class="btn btn-primary px-1 py-0" href="/membership-login">Login</a></p>
+                                <p>Sudah punya akun? <a class="" href="/membership-login">Login</a></p>
                                 <button type="submit" name="register" id="register" class="btn btn-danger mt-2 p-1">Buat Akun</button>
                             </div>
                         </form>

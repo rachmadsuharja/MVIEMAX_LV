@@ -10,21 +10,21 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-            <a class="nav-link {{($title === 'Halaman Utama') ? 'active' : ''}}" href="/">Home</a>
+            <a class="nav-link {{($title === 'Halaman Utama') ? 'active border-bottom border-white' : ''}}" href="/">Home</a>
             </li>
             <li class="nav-item dropdown">
-            <a class="nav-link {{($title === 'Register Membership') ? 'active' : ''}} {{($title === 'Register Publisher') ? 'active' : ''}} dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link {{(($title === 'Register Publisher') ? 'active' : ($title === 'Register Membership')) ? 'active' : ''}} dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 User
             </a>
             <ul class="dropdown-menu dropdown-menu">
-                <li><a class="dropdown-item" href="/membership-register">Membership</a></li>
-                <li><a class="dropdown-item" href="/publisher-register">Publisher</a></li>
+                <li><a class="dropdown-item {{($title === 'Register Membership') ? 'active bg-dark border-bottom border-white' : ''}}" href="/membership-register">Membership</a></li>
+                <li><a class="dropdown-item {{($title === 'Register Publisher') ? 'active bg-dark border-bottom border-white' : ''}}" href="/publisher-register">Publisher</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="/admin-login">Admin</a></li>
             </ul>
             </li>
             <li class="nav-item">
-            <a class="nav-link {{($title === 'User Feedback') ? 'active' : ''}}" href="/user-feedback">Feedback</a>
+            <a class="nav-link {{($title === 'User Feedback') ? 'active border-bottom border-white' : ''}}" href="/user-feedback">Feedback</a>
             </li>
         </ul>
         </div>

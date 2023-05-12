@@ -9,13 +9,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-                <a class="nav-link {{($title === 'Membership') ? 'active' : ''}}" aria-current="page" href="/membership">Home</a>
+                <a class="nav-link {{($title === 'Membership') ? 'active border-bottom border-white' : ''}}" aria-current="page" href="/membership">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{($title === 'All Movies') ? 'active' : ''}}" aria-current="page" href="/membership/all-movies">Film</a>
+                <a class="nav-link {{($title === 'All Movies') ? 'active border-bottom border-white' : ''}}" aria-current="page" href="/membership/all-movies">Film</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{($title === 'Settings') ? 'active' : ''}}" aria-current="page" href="#">Settings</a>
+                <a class="nav-link {{($title === 'Settings') ? 'active border-bottom border-white' : ''}}" aria-current="page" href="#">Settings</a>
             </li>
             <div class="container bg-danger d-flex align-items-center justify-content-start">
                 <li class="nav-item w-100">

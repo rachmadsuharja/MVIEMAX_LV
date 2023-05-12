@@ -11,7 +11,7 @@ class FilmController extends Controller
 {
     public function index()
     {
-        $films = Film::select('*')->get();
+        $films = Film::latest()->paginate('3');
         return view('publisher/all-movies', [
             "title" => "Film Settings",
             "films" => $films

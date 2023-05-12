@@ -40,7 +40,7 @@ class AdminController extends Controller
     }
     
     public function film() {
-        $films = Film::select('*')->get();
+        $films = Film::latest()->paginate('3');
         return view('/admin/movies', [
             "title" => "Movies",
             "films" => $films
@@ -58,7 +58,7 @@ class AdminController extends Controller
     }
 
     public function role() {
-        $roles = Role::select('*')->get();
+        $roles = Role::latest()->paginate('3');
         return view('/admin/roles', [
             "title" => "Role Settings",
             "roles" => $roles
@@ -130,7 +130,7 @@ class AdminController extends Controller
     }
 
     public function publisher() {
-        $publisher = Publisher::select('*')->get();
+        $publisher = Publisher::latest()->paginate('3');
         return view('/admin/publishers', [
             "title" => "Publisher Settings",
             "publisher" => $publisher
@@ -227,7 +227,7 @@ class AdminController extends Controller
     }
     
     public function membership() {
-        $member = Membership::select('*')->get();
+        $member = Membership::latest()->paginate('3');
         $roles = Role::all();
         return view('/admin/members', [
             "title" => "Membership Settings",
@@ -335,7 +335,7 @@ class AdminController extends Controller
     }
 
     public function feedback() {
-        $feedback = Feedback::select('*')->get();
+        $feedback = Feedback::latest()->paginate('3');
         $feedAmount = count($feedback);
         return view('/admin/feedback', [
             "title" => "Feedback Settings",

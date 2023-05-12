@@ -15,11 +15,11 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text bg-secondary text-white" id="inputGroup-sizing-default">Cari</span>
                 </div>
-                <input type="text" id="searchInput" onkeyup="searchRole()" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                <input type="text" id="searchInput" onkeyup="search()" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
             </div>
             <a class="btn btn-primary p-1 m-2" href="/admin/roles/add-role"><i class="fa-solid fa-circle-plus"></i> Tambah Role</a>
         </div>
-        <table id="roleList" class="table table-dark" style="color: #dddd;">
+        <table id="table" class="table table-dark" style="color: #dddd;">
             <thead>
                 <th class="bg-secondary text-white" scope="col">Role Settings</th>
                 <th class="bg-secondary text-white" scope="col">Nama</th>
@@ -29,9 +29,14 @@
             </thead>
             @foreach ($roles as $role)
                 <tr>
-                    <th>
+                    <th class="d-flex">
                         <a class="btn btn-outline-primary p-1" href="/admin/roles/edit-role/{{$role->id}}"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
-                        <a class="btn btn-outline-danger p-1" href="/admin/roles/delete-role/{{$role->id}}" onclick="return confirm('Anda yakin?')"><i class="fa-solid fa-trash"></i> Hapus</a>
+                        &nbsp;
+                        <form method="post" action="{{route('delete-role', ['id' => $role->id])}}">
+                            @csrf
+                            @method('delete')
+                            <button class="btn btn-outline-danger" type="submit" onclick="return confirm('Anda yakin?')"><i class="fa-solid fa-trash"></i> Hapus</button>
+                        </form>
                     </th>
                     <td>{{$role->name}}</td>
                     <td>{{$role->features}}</td>
@@ -40,5 +45,7 @@
                 </tr>
             @endforeach
         </table>
+        {{$roles->links()}}
+
     </div>
 @endsection
