@@ -14,22 +14,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
-
-
 class AdminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function dashboard()
     {
-        $films = count(Film::select('*')->get());
-        $roles = count(Role::select('*')->get());
-        $publisher = count(Publisher::select('*')->get());
-        $member = count(Membership::select('*')->get());
+        $films = Film::all();
+        $roles = Role::all();
+        $publisher = Publisher::all();
+        $member = Membership::all();
+        
         return view('/admin/dashboard', [
             "title" => "Administrator",
             "filmAmount" => $films,
@@ -37,13 +32,19 @@ class AdminController extends Controller
             "publisherAmount" => $publisher,
             "memberAmount" => $member
         ]);
+        
     }
     
-    public function film() {
-        $films = Film::latest()->paginate('3');
+    public function film(Request $request) {
+        if ($request->has('search')) {
+            $films = Film::where('title', 'LIKE', '%'.$request->search.'%')->paginate(3);
+            $films->appends(['search' => $request->search]);
+        } else {
+            $films = Film::latest()->paginate(3);
+        }
         return view('/admin/movies', [
             "title" => "Movies",
-            "films" => $films
+            "films" => $films,
         ]);
     }
     public function deleteFilm($id) {
@@ -54,11 +55,16 @@ class AdminController extends Controller
         }
         $delMovie->delete();
 
-        return redirect('/admin/all-movies');
+        return redirect('/admin/all-movies')->with('success', 'Berhasil menghapus film');
     }
 
-    public function role() {
-        $roles = Role::latest()->paginate('3');
+    public function role(Request $request) {
+        if ($request->has('search')) {
+            $roles = Role::where('name', 'LIKE', '%'.$request->search.'%')->paginate(3);
+            $roles->appends(['search' => $request->search]);
+        } else {
+            $roles = Role::paginate(3);
+        }
         return view('/admin/roles', [
             "title" => "Role Settings",
             "roles" => $roles
@@ -70,19 +76,17 @@ class AdminController extends Controller
         ]);
     }
     public function storeRole(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:membership_role|max:50',
+        $request->validate([
+            'name' => 'required|max:50',
             'features' => 'required',
-            'price' => 'required',
+            'price' => 'required|numeric',
         ],[
             'name.required' => 'Isi nama role terebih dahulu',
             'name.unique' => 'Nama role sudah terdaftar',
             'features.required' => 'Pilih fitur minimal satu',
             'price.required' => 'Harga tidak boleh kosong',
+            'price.numeric' => 'Harga tidak valid',
         ]);
-        if ($validator->fails()) {
-            return redirect('/admin/roles/add-role')->withErrors($validator->errors()->messages());
-        }
         $features = implode(', ', $request->features);
         $upRole = new Role();
         $upRole->name = $request->name;
@@ -90,7 +94,7 @@ class AdminController extends Controller
         $upRole->price = $request->price;
         $upRole->role_limit = $request->role_limit;
         $upRole->save();
-        return redirect('/admin/roles');
+        return redirect('/admin/roles')->with('success', 'Berhasil menambahkan role');
     }
     public function editRole($id) {
         $role = Role::find($id);
@@ -111,7 +115,7 @@ class AdminController extends Controller
             'price.numeric' => 'Harga tidak valid',
         ]);
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator->errors()->messages());
+            return back()->withErrors($validator->errors()->messages());
         }
         $upRole = Role::findorFail($id);
         $features = implode(', ', $request->features);
@@ -121,16 +125,25 @@ class AdminController extends Controller
             'price' => $request->price,
             'role_limit' => $request->role_limit
         ]);
-        return redirect('/admin/roles');
+        return redirect('/admin/roles')->with('success', 'Berhasil mengubah role');
     }
     public function deleteRole($id) {
-        $delRole = Role::find($id);
-        $delRole->delete($id);
-        return redirect('/admin/roles');
+        try {
+            $delRole = Role::find($id);
+            $delRole->delete($id);
+            return redirect('/admin/roles')->with('success', 'Berhasil menghapus role');
+        } catch (QueryException $e) {
+            return back()->with('error', 'Data masih digunakan user');
+        }
     }
 
-    public function publisher() {
-        $publisher = Publisher::latest()->paginate('3');
+    public function publisher(Request $request) {
+        if ($request->has('search')) {
+            $publisher = Publisher::where('username', 'LIKE', '%'.$request->search.'%')->paginate(3);
+            $publisher->appends(['search' => $request->search]);
+        } else {
+            $publisher = Publisher::paginate(3);
+        }
         return view('/admin/publishers', [
             "title" => "Publisher Settings",
             "publisher" => $publisher
@@ -142,7 +155,7 @@ class AdminController extends Controller
         ]);
     }
     public function storePublisher(Request $request) {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'username' => 'required|unique:user_publisher|alpha|min:6',
             'no_telp' => 'required|numeric|unique:user_publisher',
             'password' => 'required|confirmed',
@@ -151,6 +164,7 @@ class AdminController extends Controller
             'username.required' => 'isi username terlebih dahulu',
             'username.unique' => 'username sudah terdaftar',
             'username.alpha' => 'username hanya boleh terdiri dari huruf',
+            'username.min' => 'Isi username minimal 6 karakter',
             'no_telp.required' => 'nomor telpon tidak boleh kosong',
             'no_telp.numeric' => 'nomor telpon tidak valid',
             'no_telp.unique' => 'nomor telpon sudah terdaftar',
@@ -158,9 +172,6 @@ class AdminController extends Controller
             'password.confirmed' => 'password tidak sama',
             'address.required' => 'Alamat tidak boleh kosong',
         ]);
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator->errors()->messages());
-        }
         $username = Str::lower($request->username);
         $data = User::create([
             "name" => time(),
@@ -178,7 +189,7 @@ class AdminController extends Controller
         ]);
         $data->save();
         $publisher->save();
-        return redirect('/admin/publishers');
+        return redirect('/admin/publishers')->with('success', 'Berhasil menambahkan publisher');
     }
     public function editPublisher($id) {
         $pub = Publisher::find($id);
@@ -195,12 +206,13 @@ class AdminController extends Controller
         ], [
             'username.required' => 'Isi username terlebih dahulu',
             'username.alpha' => 'Username hanya boleh terdiri dari huruf',
+            'username.min' => 'Isi username minimal 6 karakter',
             'no_telp.required' => 'Nomor telpon tidak boleh kosong',
             'no_telp.numeric' => 'Nomor telpon tidak valid',
             'address.required' => 'Alamat tidak boleh kosong',
         ]);
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator->errors()->messages());
+            return back()->withErrors($validator->errors()->messages());
         }
         $publisher = Publisher::findOrFail($id);
         $user_id = DB::table('user_publisher')->where('id', $id)->value('user_id');
@@ -215,7 +227,7 @@ class AdminController extends Controller
         $publisher->no_telp = $request->no_telp;
         $publisher->address = $request->address;
         $publisher->save();
-        return redirect('/admin/publishers');
+        return redirect('/admin/publishers')->with('success', 'Berhasil mengubah role');
     }
     public function deletePublisher($id) {
         $rmPublisher = Publisher::find($id);
@@ -223,11 +235,16 @@ class AdminController extends Controller
         $rmUserPublisher = User::find($user_id);
         $rmPublisher->delete($id);
         $rmUserPublisher->delete($user_id);
-        return redirect('admin/publishers');
+        return redirect('admin/publishers')->with('success', 'Berhasil menghapus publisher');
     }
     
-    public function membership() {
-        $member = Membership::latest()->paginate('3');
+    public function membership(Request $request) {
+        if ($request->has('search')) {
+            $member = Membership::where('name', 'LIKE', '%'.$request->search.'%')->paginate(3);
+            $member->appends(['search' => $request->search]);
+        } else {
+            $member = Membership::paginate(3);
+        }
         $roles = Role::all();
         return view('/admin/members', [
             "title" => "Membership Settings",
@@ -243,7 +260,7 @@ class AdminController extends Controller
         ]);
     }
     public function storeMember(Request $request) {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             "name" => 'required|alpha',
             "email" => 'required|unique:user_membership|email',
             "password" => 'required|confirmed',
@@ -260,11 +277,9 @@ class AdminController extends Controller
             'gender.required' => 'Pilih gender terlebih dahulu',
             'role_id.required' => 'Pilih role terlebih dahulu',
         ]);
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator->errors()->messages());
-        }
+        $name = Str::ucfirst($request->name);
         $data = User::create([
-            "name" => $request->name,
+            "name" => $name,
             "username" => microtime(true),
             "email" => $request->email,
             "password" => Hash::make($request->password),
@@ -280,7 +295,7 @@ class AdminController extends Controller
         ]);
         $data->save();
         $member->save();
-        return redirect('/admin/memberships');
+        return redirect('/admin/memberships')->with('success', 'Berhasil menambahkan membership');
     }
     public function editMember($id) {
         $member = Membership::findOrFail($id);
@@ -306,23 +321,23 @@ class AdminController extends Controller
             'role_id.required' => 'Pilih role terlebih dahulu',
         ]);
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator->errors()->messages());
+            return back()->withErrors($validator->errors()->messages());
         }
         $membership = Membership::findOrFail($id);
         $user_id = DB::table('user_membership')->where('id', $id)->value('user_id');
         DB::table('users')->where('id', $user_id)->update([
-            "name" => $request->name,
+            "name" => Str::ucfirst($request->name),
             "username" => microtime(true),
             "email" => $request->email,
             "role" => "membership",
         ]);
         $membership->user_id = $user_id;
-        $membership->name = $request->name;
+        $membership->name = Str::ucfirst($request->name);
         $membership->email = $request->email;
         $membership->gender = $request->gender;
         $membership->role_id = $request->role_id;
         $membership->save();
-        return redirect('/admin/memberships');
+        return redirect('/admin/memberships')->with('success', 'Berhasil mengubah membership');
     }
     public function deleteMember($id) {
         $rmMember = Membership::find($id);
@@ -331,12 +346,17 @@ class AdminController extends Controller
         $rmMember->delete($id);
         $rmUserMember->delete($user_id);
 
-        return redirect('/admin/memberships');
+        return redirect('/admin/memberships')->with('success', 'Berhasil menghapus membership');
     }
 
-    public function feedback() {
-        $feedback = Feedback::latest()->paginate('3');
-        $feedAmount = count($feedback);
+    public function feedback(Request $request) {
+        $feedAmount = count(Feedback::all());
+        if ($request->has('search')) {
+            $feedback = Feedback::where('name', 'LIKE', '%'.$request->search.'%')->paginate(3);
+            $feedback->appends(['search' => $request->search]);
+        } else {
+            $feedback = Feedback::paginate(3);
+        }
         return view('/admin/feedback', [
             "title" => "Feedback Settings",
             "feedback" => $feedback,
@@ -349,9 +369,9 @@ class AdminController extends Controller
         ]);
     }
     public function storeFeedback(Request $request) {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             "name" => 'required|alpha',
-            "email" => 'required|unique:user_membership|email',
+            "email" => 'required|unique:user_feedback|email',
             "feedback" => 'required'
         ], [
             'name.required' => 'Nama tidak boleh kosong',
@@ -361,15 +381,12 @@ class AdminController extends Controller
             'email.email' => 'Email tidak valid',
             'feedback.required' => 'Feedback tidak boleh kosong',
         ]);
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator->errors()->messages());
-        }
         $upFeedback = new Feedback();
         $upFeedback->name = $request->name;
         $upFeedback->email = $request->email;
         $upFeedback->feedback = $request->feedback;
         $upFeedback->save();
-        return redirect('/');
+        return redirect('/user-feedback')->with('success', 'Berhasil mengirim feedback');
     }
     public function editFeedback($id) {
         $feed = Feedback::find($id);
@@ -391,7 +408,7 @@ class AdminController extends Controller
             'feedback.required' => 'Feedback tidak boleh kosong',
         ]);
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator->errors()->messages());
+            return back()->withErrors($validator->errors()->messages());
         }
         $upFeedback = Feedback::findorFail($id);
         $upFeedback->update([
@@ -400,11 +417,11 @@ class AdminController extends Controller
             'feedback' => $request->feedback,
         ]);
         $upFeedback->update($request->all());
-        return redirect('/admin/feedback');
+        return redirect('/admin/feedback')->with('success', 'Berhasil mengubah feedback');
     }
     public function deleteFeedback($id) {
         $rmFeedback = Feedback::find($id);
         $rmFeedback->delete($id);
-        return redirect('/admin/feedback');
+        return redirect('/admin/feedback')->with('success', 'Berhasil menghapus feedback');
     }
 }

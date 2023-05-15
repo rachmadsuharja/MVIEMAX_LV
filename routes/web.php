@@ -23,12 +23,12 @@ use App\Http\Controllers\AdminController;
 */
 
 Route::get('/', function() {
-    $films = Film::select('*')->get();
+    $films = Film::paginate(3);
     return view('index', [
         "title" => "Halaman Utama",
         "films"=> $films,
     ]);
-})->name('login');
+})->name('landing-page');
 
 
 /*
@@ -57,6 +57,10 @@ Route::get('/publisher-forgot-password', [UserController::class, 'forgotPublishe
 Route::put('/publisher-update-password', [UserController::class, 'updatePublishPass'])->name('publisher-update-password');
 Route::post('/publisher-login/store', [UserController::class, 'storeLoginPublisher'])->name('store-login-publisher');
 
+//feedback
+Route::get('/user-feedback', [AdminController::class, 'addFeedback'])->name('add-feedback');
+Route::post('/user-feedback/store-feedback', [AdminController::class, 'storeFeedback'])->name('store-feedback');
+
 Route::middleware('auth')->group(function() {
     Route::group(['middleware' => 'adminaccess'], function() {
         //dashboard
@@ -70,30 +74,28 @@ Route::middleware('auth')->group(function() {
         Route::post('/admin/roles/add-role', [AdminController::class, 'storeRole'])->name('store-role');
         Route::get('/admin/roles/edit-role/{id}', [AdminController::class, 'editRole'])->name('edit-role');
         Route::put('/admin/roles/update-role/{id}', [AdminController::class, 'updateRole'])->name('update-role');
-        Route::get('/admin/roles/delete-role/{id}', [AdminController::class, 'deleteRole'])->name('delete-role');
+        Route::delete('/admin/roles/delete-role/{id}', [AdminController::class, 'deleteRole'])->name('delete-role');
         //publishers
         Route::get('/admin/publishers', [AdminController::class, 'publisher'])->name('publisher');
         Route::get('/admin/publishers/add-publisher', [AdminController::class, 'addPublisher'])->name('add-publisher');
         Route::post('/admin/publishers/add-publisher/store', [AdminController::class, 'storePublisher'])->name('store-publisher');
         Route::get('/admin/publishers/edit-publisher/{id}', [AdminController::class, 'editPublisher'])->name('edit-publisher');
         Route::put('/admin/publishers/update-publisher/{id}', [AdminController::class, 'updatePublisher'])->name('update-publisher');
-        Route::get('/admin/publishers/delete-publisher/{id}', [AdminController::class, 'deletePublisher'])->name('delete-publisher');
+        Route::delete('/admin/publishers/delete-publisher/{id}', [AdminController::class, 'deletePublisher'])->name('delete-publisher');
         //memberships
         Route::get('/admin/memberships', [AdminController::class, 'membership'])->name('membership');
         Route::get('/admin/memberships/add-member', [AdminController::class, 'addMember'])->name('add-member');
         Route::post('/admin/memberships/add-member/store', [AdminController::class, 'storeMember'])->name('store-member');
         Route::get('/admin/memberships/edit-member/{id}', [AdminController::class, 'editMember'])->name('edit-member');
         Route::put('/admin/memberships/update-member/{id}', [AdminController::class, 'updateMember'])->name('update-member');
-        Route::get('/admin/memberships/delete-member/{id}', [AdminController::class, 'deleteMember'])->name('delete-member');
+        Route::delete('/admin/memberships/delete-member/{id}', [AdminController::class, 'deleteMember'])->name('delete-member');
         //feedbacks
-        Route::get('/user-feedback', [AdminController::class, 'addFeedback'])->name('add-feedback');
-        Route::post('/user-feedback/store-feedback', [AdminController::class, 'storeFeedback'])->name('store-feedback');
         Route::get('/admin/feedback', [AdminController::class, 'feedback'])->name('feedback');
         Route::get('/admin/feedback/edit-feedback/{id}', [AdminController::class, 'editFeedback'])->name('edit-feedback');
         Route::put('/admin/feedback/update-feedback/{id}', [AdminController::class, 'updateFeedback'])->name('update-feedback');
-        Route::get('/admin/feedback/delete-feedback/{id}', [AdminController::class, 'deleteFeedback'])->name('delete-feedback');
+        Route::delete('/admin/feedback/delete-feedback/{id}', [AdminController::class, 'deleteFeedback'])->name('delete-feedback');
         //logout
-        Route::get('/admin-logout', [UserController::class, 'adminLogout']);
+        Route::post('/admin-logout', [UserController::class, 'adminLogout'])->name('admin-logout');
     });
     
     /*PUBLISHER PAGE*/
@@ -112,28 +114,39 @@ Route::middleware('auth')->group(function() {
         Route::post('/publisher/film-settings/store', [FilmController::class, 'store'])->name('add-movie');
         Route::get('/publisher/film-settings/update-movies/{id}', [FilmController::class, 'edit'])->name('edit-movie');
         Route::put('/publisher/film-settings/update-movies/{id}', [FilmController::class, 'update'])->name('update-movie');
-        Route::get('/publisher/film-settings/delete-movies/{id}', [FilmController::class, 'destroy'])->name('delete-movie');
+        Route::delete('/publisher/film-settings/delete-movies/{id}', [FilmController::class, 'destroy'])->name('delete-movie');
         //logout
-        Route::get('/publisher-logout', [UserController::class, 'publisherLogout']);
+        Route::post('/publisher-logout', [UserController::class, 'publisherLogout'])->name('publisher-logout');
     });
     
     /*MEMBER PAGE*/
     Route::group(['middleware' => 'memberaccess'], function() {
         Route::get('/membership', function() {
+            $membership = Membership::where('user_id', Auth::user()->id)->first();
+            $latestMv = Film::latest()->paginate(3);
             return view('/membership/dashboard', [
-                "title" => "Membership"
+                "title" => "Membership",
+                'role' => $membership->role->name,
+                'latestMv' => $latestMv,
+                'limit' => $membership->role->role_limit,
+                'features' => $membership->role->features,
             ]);
         });
-    
-        Route::get('/membership/all-movies', function() {
-            $films = Film::latest()->paginate('3');
+        
+        Route::get('/membership/all-movies', function(Request $request) {
+            if ($request->has('search')) {
+                $films = Film::where('title', 'LIKE', '%'.$request->search.'%')->paginate(3);
+                $films->appends(['search' => $request->search]);
+            } else {
+                $films = Film::paginate(3);
+            }
             return view('/membership/all-movies', [
                 "title" => "All Movies",
                 "films" => $films
             ]);
         });
     
-        Route::get('/membership-logout', [UserController::class, 'memberLogout']);
+        Route::post('/membership-logout', [UserController::class, 'memberLogout'])->name('member-logout');
     });
 });
 Route::get('/about-laravel', function () {

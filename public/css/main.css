@@ -141,6 +141,11 @@
 
 .card-box:hover h1 {
     color: aqua;
+    transition: 2s;
+}
+
+.card-box:hover .genre {
+    display: none;
     transition: .5s;
 }
 

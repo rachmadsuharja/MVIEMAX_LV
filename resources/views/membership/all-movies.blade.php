@@ -1,37 +1,33 @@
 @extends('layouts.main')
 @extends('partials.member-navbar')
 
-@section('navbar')
-    @section('logout')
-        <a href="/membership-logout" class="btn btn-outline-dark" onclick="return confirm('Anda yakin?')">LOGOUT</a>
-    @endsection
-@endsection
-
 @section('container')
-<div class="m-0 p-5">
-    <div class="tbHead w-100 d-flex justify-content-around align-items-center">
-        <div class="input-group mb-3 mt-3 w-25">
-            <div class="input-group-prepend">
-                <span class="input-group-text bg-secondary text-white" id="inputGroup-sizing-default">Cari</span>
+<div class="m-5 p-3 rounded" style="background-color: rgba(0,0,0, .5); box-shadow: 0px 2px 4px rgb(53, 53, 53)">
+    <form action="/membership/all-movies" method="get">
+        <div class="tbHead w-100 d-flex justify-content-between align-items-center">
+            <div class="input-group mb-3 mt-3 w-25 d-flex align-items-center">
+                <input type="search" name="search" value="{{request('search')}}" placeholder="What are you looking for? ..." id="searchInput" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" autofocus>
+                <div class="input-group-prepend">
+                    <span class="input-group-text bg-danger border-0 p-2 text-white" id="inputGroup-sizing-default">Search</span>
+                </div>
             </div>
-            <input type="text" id="searchInput" onkeyup="search()" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
         </div>
-    </div>
-    <table id="table" class="table table-dark mt-3" style="color: #dddd;">
+    </form>
+    <table id="table" class="table" style="color: #dddd;">
         <thead>
-            <th class="bg-secondary text-white" scope="col">Judul</th>
-            <th class="bg-secondary text-white" scope="col">Tanggal Rilis</th>
-            <th class="bg-secondary text-white" scope="col">Genre</th>
-            <th class="bg-secondary text-white" scope="col">Cover</th>
-            <th class="bg-secondary text-white" scope="col">Deskripsi</th>
+            <th class="bg-dark text-white" scope="col">Judul</th>
+            <th class="bg-dark text-white" scope="col">Tanggal Rilis</th>
+            <th class="bg-dark text-white" scope="col">Genre</th>
+            <th class="bg-dark text-white" scope="col">Cover</th>
+            <th class="bg-dark text-white" scope="col">Deskripsi</th>
         </thead>
         @foreach ($films as $film)
             <tr>
-                <td>{{$film->title}}</td>
-                <td>{{$film->release_date}}</td>
-                <td>{{$film->genre}}</td>
-                <td><img src="{{asset('img/temp/' . $film->img_cover)}}" width="100" alt="No Pict"></td> 
-                <td style="width:20em">{{$film->film_desc}}</td>
+                <td class="border-secondary">{{$film->title}}</td>
+                <td class="border-secondary">{{$film->release_date}}</td>
+                <td class="border-secondary">{{$film->genre}}</td>
+                <td class="border-secondary"><img src="{{asset('img/temp/' . $film->img_cover)}}" width="100" alt="No Pict"></td> 
+                <td class="border-secondary" style="width:20em">{{$film->film_desc}}</td>
             </tr>
         @endforeach
     </table>

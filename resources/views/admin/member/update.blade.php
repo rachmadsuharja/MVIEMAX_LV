@@ -6,7 +6,7 @@
 
 @section('container')
     <div class="container bg-transparent w-100 h-100 p-3 d-flex justify-content-center align-items-center">
-        <div class="container-fluid w-50 px-5 py-3 bg-danger rounded">
+        <div class="container-fluid w-50 px-5 py-3 rounded" style="background: rgba(255,0,0, .6)">
             <div class="mb-3 d-flex justify-content-center">
                 <h3 style="color: #dfdfdf;">Update Membership</h3>
             </div>
@@ -22,7 +22,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" value="{{$member->email}}" id="email" placeholder="name@example.com">
+                        <input type="text" class="form-control" name="email" value="{{$member->email}}" id="email" placeholder="name@example.com">
                         @error('email')
                             <div class="alert alert-transparent d-flex align-items-center p-0 text-white-50"><i class="fa-solid fa-circle-exclamation p-1"></i> {{$message}} </div>
                         @enderror

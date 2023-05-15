@@ -9,9 +9,14 @@ use Illuminate\Support\Facades\Validator;
 
 class FilmController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $films = Film::latest()->paginate('3');
+        if ($request->has('search')) {
+            $films = Film::where('title', 'LIKE', '%'.$request->search.'%')->paginate(3);
+            $films->appends(['search' => $request->search]);
+        } else {
+            $films = Film::paginate(3);
+        }
         return view('publisher/all-movies', [
             "title" => "Film Settings",
             "films" => $films
@@ -27,7 +32,7 @@ class FilmController extends Controller
     
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'title' => 'required',
             'release_date' => 'required',
             'genre' => 'required',
@@ -41,9 +46,6 @@ class FilmController extends Controller
             'img_cover.mimes' => 'Cover tidak valid',
             'film_desc.required' => 'Deskripsi tidak boleh kosong'
         ]);
-        if ($validator->fails()) {
-            return redirect('/publisher/film-settings/add-movies')->withErrors($validator->errors()->messages());
-        }
         $rlsDt = date('d-m-Y', strtotime($request->input('release_date')));
         $genres = implode(', ', $request->genre);
         $cover = $request->img_cover;
@@ -57,7 +59,7 @@ class FilmController extends Controller
         $cover->move(public_path().'/img/temp', $coverName);
         $upMovie->save();
 
-        return redirect('/publisher/film-settings');
+        return redirect('/publisher/film-settings')->with('success', 'Berhasil menambahkan film');
     }
 
     public function show()
@@ -126,7 +128,7 @@ class FilmController extends Controller
         $upMovie['genre'] = implode(', ', $request->genre);
         $movie->update($upMovie);
     }
-    return redirect('publisher/film-settings');
+    return redirect('publisher/film-settings')->with('success', 'Berhasil mengubah film');
 }
 
     public function destroy($id)
@@ -137,7 +139,7 @@ class FilmController extends Controller
             unlink($file);
         }
         $delMovie->delete();
-        return redirect('/publisher/film-settings');
+        return redirect('/publisher/film-settings')->with('success', 'Berhasil menghapus film');
     }
 }
 

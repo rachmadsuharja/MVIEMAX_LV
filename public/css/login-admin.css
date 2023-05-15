@@ -14,7 +14,7 @@ body {
 .form-signin {
     max-width: 24em;
     padding: 2em;
-    background-color: crimson;
+    background: rgba(220, 20, 60, .7);
     border-radius: 1em;
     box-shadow: 0px 4px 10px #1b1b1b;
 }

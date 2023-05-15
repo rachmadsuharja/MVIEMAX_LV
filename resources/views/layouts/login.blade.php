@@ -5,7 +5,7 @@
 @endsection
 
 @section('container')
-<div class="container mt-5 d-flex justify-content-center align-items-center" style="background-color: crimson; border-radius:1em; box-shadow: 0px 4px 10px black">
+<div class="container w-75 mt-5 d-flex justify-content-center align-items-center" style="background: rgba(255,0,0,.5); border-radius:1em; box-shadow: 0px 4px 10px rgb(60, 59, 59)">
     <div class="container-fluid mt-5 d-flex justify-content-evenly">
         <main class="form-signin w-50">
             @yield('form-head')

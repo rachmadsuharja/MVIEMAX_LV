@@ -12,12 +12,12 @@
                     <h1 data-aos="zoom-in" data-aos-duration="2000">MVIEMAX</h1>
                     <p id="subtitle" class="mx-1"></p>
                 </div>
-                <a class="mx-3" href="#popularMovie"><i class="fa-solid fa-list"></i> List Film</a>
+                <a class="mx-3" href="#popularMovie"><i class="fa-solid fa-list"></i> Movie List</a>
             </div>
         </div>
     </div>
     <div id="popularMovie" class="popularMovie d-grid mt-5">
-        <h2 class="text-white mt-5 d-flex justify-content-center">Film Terpopuler</h2>
+        <h2 class="text-white mt-5 mb-2 d-flex justify-content-center" style="font-family: 'Oswald">Popular Movie</h2>
         <div id="all-list">
             @foreach ($films as $film)
                 <div class="card-box">

@@ -16,6 +16,8 @@
         html,
         body {
             height: 100%;
+            background-image: url('/img/main.jpg');
+            background-size: cover;
         }
 
         body {
@@ -29,7 +31,7 @@
         .form-signin {
             max-width: 24em;
             padding: 2em;
-            background-color: crimson;
+            background: rgba(220, 20, 60, .7);
             border-radius: 1em;
             box-shadow: 0px 4px 10px #1b1b1b;
         }
@@ -110,18 +112,18 @@
             <img class="w-25 h-25 mb-3" src="/img/logo.png" data-aos="zoom-in" data-aos-duration="1000">
             <h1 class="h3 mb-3" style="color:#dfdfdf;">Ganti Password</h1>
             <div class="form-floating mb-2">
-                <input type="email" class="form-control" style="background-color: #FFFDD0; color:#291F1E" name="email" id="email" autofocus>
+                <input type="email" class="form-control" placeholder="email" style="background-color: #FFFDD0; color:#291F1E" name="email" id="email" autofocus>
                 <label for="email">Email</label>
             </div>
             @error('email')
                 <div class="alert alert-transparent d-flex align-items-center p-0 text-white-50"><i class="fa-solid fa-circle-exclamation p-1"></i>{{$message}}</div>
             @enderror
             <div class="form-floating mb-2">
-                <input type="password" class="form-control" style="background-color: #FFFDD0; color:#291F1E" name="password" id="password">
+                <input type="password" class="form-control" placeholder="new password" style="background-color: #FFFDD0; color:#291F1E" name="password" id="password">
                 <label for="password">Password Baru</label>
             </div>
             <div class="form-floating mb-2">
-                <input type="password" class="form-control" style="background-color: #FFFDD0; color:#291F1E" name="password_confirmation" id="password_confirmation">
+                <input type="password" class="form-control" placeholder="confirm new password" style="background-color: #FFFDD0; color:#291F1E" name="password_confirmation" id="password_confirmation">
                 <label for="password_confirmation">Konfirmasi Password Baru</label>
             </div>
             @error('password')

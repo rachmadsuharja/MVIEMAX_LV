@@ -12,14 +12,39 @@
                 <a class="nav-link {{($title === 'Membership') ? 'active border-bottom border-white' : ''}}" aria-current="page" href="/membership">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{($title === 'All Movies') ? 'active border-bottom border-white' : ''}}" aria-current="page" href="/membership/all-movies">Film</a>
+                <a class="nav-link {{($title === 'All Movies') ? 'active border-bottom border-white' : ''}}" aria-current="page" href="/membership/all-movies">Movie</a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link {{($title === 'Settings') ? 'active border-bottom border-white' : ''}}" aria-current="page" href="#">Settings</a>
-            </li>
+            </li> --}}
             <div class="container bg-danger d-flex align-items-center justify-content-start">
+                <script>
+                    function confirmLogout(event) {
+                        event.preventDefault();
+                        Swal.fire({
+                            title: 'Logout!',
+                            text: "Anda yakin ingin keluar?",
+                            icon: 'warning',
+                            background: '#333',
+                            color: 'white',
+                            backdrop: 'rgba(0, 0, 0, .8)',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Tidak',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                document.getElementById('logout').submit();
+                            }
+                        })
+                    }
+                </script>
                 <li class="nav-item w-100">
-                    @yield('logout')
+                    <form action="{{route('member-logout')}}" id="logout" method="post" onsubmit="confirmLogout(event)">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-dark">LOGOUT</button>
+                    </form>
                 </li>
             </div>
         </ul>

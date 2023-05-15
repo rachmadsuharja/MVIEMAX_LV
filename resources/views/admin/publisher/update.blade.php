@@ -7,7 +7,7 @@
 @section('container')
     <div class="container bg-transparent mt-5">
         <div class="container bg-transparent w-100 h-100 p-3 d-flex justify-content-center align-items-center">
-            <div class="container-fluid w-50 px-5 py-3 bg-danger rounded">
+            <div class="container-fluid w-50 px-5 py-3 rounded" style="background: rgba(255,0,0, .6)">
                 <div class="mb-3 d-flex justify-content-center">
                     <h3 style="color:#dfdfdf">Edit Publisher</h3>
                 </div>

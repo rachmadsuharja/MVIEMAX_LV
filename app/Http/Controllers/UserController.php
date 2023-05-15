@@ -25,7 +25,7 @@ class UserController extends Controller
         ]);
     }
     public function storeRegMember(Request $request) {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             "name" => 'required|alpha',
             "email" => 'required|unique:user_membership|email',
             "password" => 'required|confirmed',
@@ -42,11 +42,9 @@ class UserController extends Controller
             'gender.required' => 'Pilih gender terlebih dahulu',
             'role_id.required' => 'Pilih role terlebih dahulu',
         ]);
-        if ($validator->fails()) {
-            return redirect('/membership-register')->withErrors($validator->errors()->messages());
-        }
+        $name = Str::ucfirst($request->name);
         $data = User::create([
-            "name" => $request->name,
+            "name" => $name,
             "username" => microtime(true),
             "email" => $request->email,
             "password" => Hash::make($request->password),
@@ -83,14 +81,19 @@ class UserController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors()->messages());
         }
+        $db_pass = DB::table('users')->where('email', $request->email)->value('password');
         $login = [
             'email' => $request->input('email'),
             'password' => $request->input('password'),
         ];
-        if (Auth::attempt($login)) {
-            return redirect('/membership');
+        if (Hash::check($request->password, $db_pass)) {
+            if (Auth::attempt($login)) {
+                return redirect('/membership');
+            }
+        } else {
+            return redirect('/membership-login')->with('error', 'Password Salah!');
         }
-        return redirect('/membership-login');
+        
     }
     public function memberLogout() {
         Auth::logout();
@@ -122,7 +125,7 @@ class UserController extends Controller
         DB::table('user_membership')->where('email', $request->email)->update([
             "password" => $pass
         ]);
-        return redirect('/membership-login');
+        return redirect('/membership-login')->with('success', 'Berhasil mengubah password');
     }
 
     public function registerPublisher() {
@@ -131,7 +134,7 @@ class UserController extends Controller
         ]);
     }
     public function storeRegPublisher(Request $request) {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'username' => 'required|unique:user_publisher|alpha|min:6',
             'no_telp' => 'required|numeric|unique:user_publisher',
             'password' => 'required|confirmed',
@@ -140,6 +143,7 @@ class UserController extends Controller
             'username.required' => 'isi username terlebih dahulu',
             'username.unique' => 'username sudah terdaftar',
             'username.alpha' => 'username hanya boleh terdiri dari huruf',
+            'username.min' => 'Isi username minimal 6 karakter',
             'no_telp.required' => 'nomor telpon tidak boleh kosong',
             'no_telp.numeric' => 'nomor telpon tidak valid',
             'no_telp.unique' => 'nomor telpon sudah terdaftar',
@@ -147,9 +151,6 @@ class UserController extends Controller
             'password.confirmed' => 'password tidak sama',
             'address.required' => 'Alamat tidak boleh kosong',
         ]);
-        if ($validator->fails()) {
-            return redirect('/publisher-register')->withErrors($validator->errors()->messages());
-        }
         $username = Str::lower($request->username);
         $data = User::create([
             "name" => time(),
@@ -201,7 +202,7 @@ class UserController extends Controller
         DB::table('user_publisher')->where('username', $request->username)->update([
             "password" => $pass
         ]);
-        return redirect('/publisher-login');
+        return redirect('/publisher-login')->with('success', 'Berhasil mengubah password');
     }
     public function storeLoginPublisher(Request $request) {
         $validator = Validator::make($request->all(), [
@@ -215,14 +216,18 @@ class UserController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors()->messages());
         }
+        $db_pass = DB::table('users')->where('username', $request->username)->value('password');
         $login = [
             'username' => $request->input('username'),
             'password' => $request->input('password'),
         ];
-        if (Auth::attempt($login)) {
-            return redirect('/publisher');
+        if (Hash::check($request->password, $db_pass)) {
+            if (Auth::attempt($login)) {
+                return redirect('/publisher');
+            }
+        } else {
+            return redirect('/publisher-login')->with('error', 'Password Salah');
         }
-        return redirect('/publisher-login');
     }
     public function publisherLogout() {
         Auth::logout();
@@ -250,11 +255,15 @@ class UserController extends Controller
             'username' => $request->input('username'),
             'password' => $request->input('password'),
         ];
-        if (Auth::attempt($login)) {
-            return redirect('/administrator');
+        $db_pass = DB::table('users')->where('username', $request->username)->value('password');
+        if (Hash::check($request->password, $db_pass)) {
+            if (Auth::attempt($login)) {
+                return redirect('/administrator')->with('success', 'Berhasil Login');
+            }
+        } else {
+            return redirect('/admin-login')->with('error', 'Password Salah');
         }
         
-        return redirect('/admin-login');
     }
     public function adminLogout() {
         Auth::logout();

@@ -30,8 +30,33 @@
                 <a class="nav-link {{($title === 'Feedback Settings') ? 'active border-bottom border-white' : ''}}" aria-current="page" href="/admin/feedback">Feedback</a>
             </li>
             <div class="container bg-danger d-flex align-items-center justify-content-start">
+                <script>
+                    function confirmLogout(event) {
+                        event.preventDefault();
+                        Swal.fire({
+                            title: 'Logout!',
+                            text: "Anda yakin ingin keluar?",
+                            icon: 'warning',
+                            background: '#333',
+                            color: 'white',
+                            backdrop: 'rgba(0, 0, 0, .8)',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Tidak',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                document.getElementById('logout').submit();
+                            }
+                        })
+                    }
+                </script>
                 <li class="nav-item w-100">
-                    <a href="/admin-logout" class="btn btn-outline-dark" onclick="return confirm('Anda yakin?')">LOGOUT</a>
+                    <form action="{{route('admin-logout')}}" id="logout" method="post" onsubmit="confirmLogout(event)">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-dark">LOGOUT</button>
+                    </form>
                 </li>
             </div>
         </ul>
