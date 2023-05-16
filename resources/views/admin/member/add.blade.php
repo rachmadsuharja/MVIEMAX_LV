@@ -39,7 +39,7 @@
                     @enderror
                 </div>
                 <div class="pass-container d-flex justify-content-between">
-                    <div class="mb-3" style="width: 13.5em">
+                    <div class="mb-3" style="width: 14em">
                         <label for="password" class="form-label">Password</label>
                         <input class="form-control" type="password" name="password" id="password" placeholder="Password..." aria-label="default input example">
                     </div>

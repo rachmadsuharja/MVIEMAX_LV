@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand-lg w-100 position-fixed bg-danger" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg w-100 position-fixed" style="background: rgb(200, 0, 0)" data-bs-theme="dark">
     <div class="container-fluid">
-        <div class="container bg-danger d-flex align-items-center">
+        <div class="container d-flex align-items-center" style="background: rgb(200,0,0,0)">
             <h1 class="navbar-brand text-white">{{$title}}</h1>
         </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,15 +21,15 @@
                 <a class="nav-link dropdown-toggle {{(($title === 'Membership Settings') ? 'active' : ($title === 'Publisher Settings')) ? 'active' : ''}}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     User
                 </a>
-                <ul class="dropdown-menu bg-danger">
-                    <li><a class="dropdown-item {{($title === 'Publisher Settings') ? 'active bg-danger border-bottom border-white' : ''}}" href="/admin/publishers">Publisher</a></li>
-                    <li><a class="dropdown-item {{($title === 'Membership Settings') ? 'active bg-danger border-bottom border-white' : ''}}" href="/admin/memberships">Membership</a></li>
+                <ul class="dropdown-menu" style="background:rgb(200, 0, 0)">
+                    <li><a class="dropdown-item {{($title === 'Publisher Settings') ? 'active border-bottom border-white' : ''}}" style="{{($title === 'Publisher Settings') ? 'background:rgba(200,0,0,0)' : ''}}" href="/admin/publishers">Publisher</a></li>
+                    <li><a class="dropdown-item {{($title === 'Membership Settings') ? 'active border-bottom border-white' : ''}}" style="{{($title === 'Membership Settings') ? 'background:rgba(200,0,0,0)' : ''}}" href="/admin/memberships">Membership</a></li>
                 </ul>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{($title === 'Feedback Settings') ? 'active border-bottom border-white' : ''}}" aria-current="page" href="/admin/feedback">Feedback</a>
             </li>
-            <div class="container bg-danger d-flex align-items-center justify-content-start">
+            <div class="container d-flex align-items-center justify-content-start" style="background: rgb(200, 0, 0)">
                 <script>
                     function confirmLogout(event) {
                         event.preventDefault();

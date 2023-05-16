@@ -15,7 +15,7 @@ class FilmController extends Controller
             $films = Film::where('title', 'LIKE', '%'.$request->search.'%')->paginate(3);
             $films->appends(['search' => $request->search]);
         } else {
-            $films = Film::paginate(3);
+            $films = Film::latest()->paginate(3);
         }
         return view('publisher/all-movies', [
             "title" => "Film Settings",
@@ -33,13 +33,14 @@ class FilmController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required',
+            'title' => 'required|unique:film_list',
             'release_date' => 'required',
             'genre' => 'required',
             'img_cover' => 'required|mimes:jpg,jpeg,png',
             'film_desc' => 'required'
         ], [
             'title.required' => 'Judul tidak boleh kosong',
+            'title.unique' => 'Film sudah terdaftar',
             'release_date.required' => 'Isi tanggal terlebih dahulu',
             'genre.required' => 'Pilih genre minimal 1',
             'img_cover.required' => 'Cover tidak boleh kosong',

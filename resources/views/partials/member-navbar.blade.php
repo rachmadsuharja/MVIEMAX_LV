@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand-lg w-100 position-fixed bg-danger" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg w-100 position-fixed" style="background: rgb(200,0,0)" data-bs-theme="dark">
     <div class="container-fluid">
-        <div class="container bg-danger d-flex align-items-center">
+        <div class="container d-flex align-items-center" style="background: rgb(200,0,0)">
             <h1 class="navbar-brand text-white">Dashboard</h1>
         </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,7 +17,7 @@
             {{-- <li class="nav-item">
                 <a class="nav-link {{($title === 'Settings') ? 'active border-bottom border-white' : ''}}" aria-current="page" href="#">Settings</a>
             </li> --}}
-            <div class="container bg-danger d-flex align-items-center justify-content-start">
+            <div class="container d-flex align-items-center justify-content-start" style="background: rgb(200,0,0)">
                 <script>
                     function confirmLogout(event) {
                         event.preventDefault();

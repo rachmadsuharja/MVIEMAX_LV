@@ -3,19 +3,19 @@
 }
 
 .bg-c-blue {
-    background: linear-gradient(45deg, #4099ff, #002cbc);
+    background: linear-gradient(45deg, #002958, #002cbc);
 }
 
 .bg-c-green {
-    background: linear-gradient(45deg, #2ed8b6, #00963c);
+    background: linear-gradient(45deg, #004f3f, #00963c);
 }
 
 .bg-c-yellow {
-    background: linear-gradient(45deg, #FFB64D, #ce7800);
+    background: linear-gradient(45deg, #5d3600, #ce7800);
 }
 
 .bg-c-red {
-    background: linear-gradient(45deg, #FF5370, #d50024);
+    background: linear-gradient(45deg, #5d000f, #d50024);
 }
 
 .card {

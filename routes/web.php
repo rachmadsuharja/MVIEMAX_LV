@@ -145,7 +145,20 @@ Route::middleware('auth')->group(function() {
                 "films" => $films
             ]);
         });
-    
+        Route::get('/membership/movie-details', function() {
+            return back();
+        });
+        Route::get('/membership/movie-details/{title?}', function($title) {
+            $slcMv = Film::where('title', $title)->first();
+            if ($slcMv == null) {
+                return back()->with('error', 'Film tidak terdaftar');
+            }
+            return view('/membership/details', [
+                'title' => 'Movie Details',
+                'movie' => $slcMv
+            ]);
+        });
+
         Route::post('/membership-logout', [UserController::class, 'memberLogout'])->name('member-logout');
     });
 });

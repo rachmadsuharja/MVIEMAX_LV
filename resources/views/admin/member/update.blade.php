@@ -42,7 +42,8 @@
                     <div class="mb-3">
                         <label for="role" class="form-label">Role</label>
                         <select class="form-select" name="role_id" id="role_id" aria-label="Default select example">
-                            <option disabled value>Pilih Role</option>
+                            <option disabled>Pilih Role</option>
+                            <option value="{{$member->role_id}}">{{$user_role}}</option>
                             @foreach ($roles as $role)
                                 <option value="{{$role->id}}">{{$role->name}}</option>
                             @endforeach

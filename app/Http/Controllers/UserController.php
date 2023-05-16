@@ -60,7 +60,7 @@ class UserController extends Controller
         ]);
         $data->save();
         $member->save();
-        return redirect('/membership-login');
+        return redirect('/membership-login')->with('success', 'Berhasil membuat akun.');
     }
 
     public function loginMembership() {
@@ -168,7 +168,7 @@ class UserController extends Controller
         ]);
         $data->save();
         $publisher->save();
-        return redirect('/publisher-login');
+        return redirect('/publisher-login')->with('success', 'Berhasil membuat akun.');
     }
     
     public function loginPublisher() {

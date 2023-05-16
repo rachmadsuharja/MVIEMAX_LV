@@ -16,14 +16,14 @@
                 <div class="mb-3 d-flex justify-content-between">
                     <div class="title-input w-50">
                         <label for="judul" class="form-label">Judul</label>
-                        <input class="form-control" type="text" name="title" value="{{$film->title}}" id="title" placeholder="Judul..." aria-label="default input example" required>
+                        <input class="form-control" type="text" name="title" value="{{$film->title}}" id="title" placeholder="Judul..." aria-label="default input example">
                         @error('title')
                             <div class="alert alert-transparent p-0 text-white-50 mt-1"><i class="fa-solid fa-circle-exclamation"></i> {{$message}} </div>
                         @enderror
                     </div>
                     <div class="date-input w-45">
                         <label for="tanggal" class="form-label">Tanggal Rilis</label>
-                        <input class="form-control" type="date" name="release_date" value="{{date('Y-m-d', strtotime($film->release_date))}}" id="release_date" aria-label="default input example" required>
+                        <input class="form-control" type="date" name="release_date" value="{{date('Y-m-d', strtotime($film->release_date))}}" id="release_date" aria-label="default input example">
                         @error('release_date')
                             <div class="alert alert-transparent p-0 text-white-50 mt-1"><i class="fa-solid fa-circle-exclamation"></i> {{$message}} </div>
                         @enderror
@@ -98,6 +98,7 @@
                 </div>
                 <div class="form-floating">
                     <textarea class="form-control" placeholder="Deskripsi..." id="film_desc" name="film_desc" style="height: 100px; resize:none;">{{$film->film_desc}}</textarea>
+                    <label for="film_desc" class="text-dark">Deskripsi</label>
                     @error('film_desc')
                         <div class="alert alert-transparent p-0 text-white-50 mt-1"><i class="fa-solid fa-circle-exclamation"></i> {{$message}} </div>
                     @enderror

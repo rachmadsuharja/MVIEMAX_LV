@@ -18,8 +18,8 @@
     <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
     {{-- GOOGLE FONT --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Oswald&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Lato&family=Oswald&display=swap" rel="stylesheet">
     {{-- FONT AWESOME --}}
     <script src="https://kit.fontawesome.com/4eb31409a6.js" crossorigin="anonymous"></script>
     {{-- BOOTSTRAP --}}

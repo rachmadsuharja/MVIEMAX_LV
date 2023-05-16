@@ -18,16 +18,14 @@
             <th class="bg-dark text-white" scope="col">Judul</th>
             <th class="bg-dark text-white" scope="col">Tanggal Rilis</th>
             <th class="bg-dark text-white" scope="col">Genre</th>
-            <th class="bg-dark text-white" scope="col">Cover</th>
-            <th class="bg-dark text-white" scope="col">Deskripsi</th>
+            <th class="bg-dark text-white" scope="col"></th>
         </thead>
         @foreach ($films as $film)
             <tr>
                 <td class="border-secondary">{{$film->title}}</td>
                 <td class="border-secondary">{{$film->release_date}}</td>
                 <td class="border-secondary">{{$film->genre}}</td>
-                <td class="border-secondary"><img src="{{asset('img/temp/' . $film->img_cover)}}" width="100" alt="No Pict"></td> 
-                <td class="border-secondary" style="width:20em">{{$film->film_desc}}</td>
+                <td class="border-secondary text-end"><a href="/membership/movie-details/{{$film->title}}" class="btn btn-outline-primary py-1"><i class="fa-solid fa-circle-info"></i> Detail</a></td>
             </tr>
         @endforeach
     </table>

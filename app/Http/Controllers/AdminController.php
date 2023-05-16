@@ -77,7 +77,7 @@ class AdminController extends Controller
     }
     public function storeRole(Request $request) {
         $request->validate([
-            'name' => 'required|max:50',
+            'name' => 'required|unique:membership_role|max:50',
             'features' => 'required',
             'price' => 'required|numeric',
         ],[
@@ -300,10 +300,13 @@ class AdminController extends Controller
     public function editMember($id) {
         $member = Membership::findOrFail($id);
         $roles = Role::all();
+        $mrole = $member->role_id;
+        $role = DB::table('membership_role')->where('id', $mrole)->value('name');
         return view('/admin/member/update', [
             "title" => "Update Membership",
             "member" => $member,
-            "roles" => $roles
+            "roles" => $roles,
+            "user_role" => $role,
         ]);
     }
     public function updateMember(Request $request, $id) {

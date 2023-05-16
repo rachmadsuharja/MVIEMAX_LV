@@ -11,7 +11,7 @@
 @section('container')
 <div class="main-content">
     <div class="greetings mt-5 m-3">
-        <h3 class="text-white d-flex"><b>WELCOME | </b> <p data-aos="fade-right">{{Auth::user()->name}}</p></h3>
+        <h3 class="text-white d-flex"><b>WELCOME | </b> <p data-aos="fade-right" data-aos-duration="1000">{{Auth::user()->name}}</p></h3>
     </div>
     <hr style="border: 1.5px solid #555555">
     <div class="container mt-5 bg-transparent">
@@ -73,7 +73,6 @@
 </div>
 <hr style="border: 1.5px solid #555555">
 <div class="container bg-transparent">
-    <a href="/" target="_blank" class="btn btn-danger">Halaman Utama</a>
 </div>
 </div>
 @endsection
